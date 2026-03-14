@@ -1,0 +1,48 @@
+# version: "3.9"
+
+# services:
+#   # ─── Databases ────────────────────────────────────────────────
+#   user-db:
+#     image: postgres:15-alpine
+#     container_name: user-db
+#     environment:
+#       POSTGRES_DB: userdb
+#       POSTGRES_USER: user
+#       POSTGRES_PASSWORD: userpass
+#     volumes:
+#       - user_db_data:/var/lib/postgresql/data
+#     ports:
+#       - "5432:5432"
+#     networks:
+#       - microservices-net
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U user -d userdb"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 5
+
+#   # ─── Microservices ────────────────────────────────────────────
+#   user-service:
+#     build:
+#       context: ./user-service
+#       dockerfile: Dockerfile
+#     container_name: user-service
+#     environment:
+#       DATABASE_URL: postgresql+asyncpg://user:userpass@user-db:5432/userdb
+#       SERVICE_NAME: user-service
+#       PORT: "8000"
+#     ports:
+#       - "8000:8000"
+#     depends_on:
+#       user-db:
+#         condition: service_healthy
+#     networks:
+#       - microservices-net
+#     restart: unless-stopped
+
+# volumes:
+#   user_db_data:
+
+# networks:
+#   microservices-net:
+#     driver: bridge
